@@ -41,7 +41,7 @@ exports.updatedProduct = async (req, res) => {
     try {
         const id = req.params.id;
         const newData = req.body;
-console.log(id)
+
         const updatedProduct = await Product.updateOne({ productId : id }, newData);
 
         res.status(200).json({ message: 'Product updated successfully' });
@@ -59,7 +59,7 @@ exports.addProduct = async (req, res) => {
 
         const productId = generateRandomNumber()
        const { title, description, seller, price,image } = req.body;
-        console.log(req.body)
+      
         const newProduct = new Product({ title, description, seller, price,image,productId });
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct);
@@ -90,7 +90,6 @@ exports.myProducts = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
 
-    console.log("you have been entered  to delete")
     try {
 
 const {id}  = req.params

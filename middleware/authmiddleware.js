@@ -40,7 +40,7 @@ const tt = jwt.decode(token)
   jwt.verify(token,"sahil", (err, user) => {
   
     req.user = user;
-  console.log(tt)
+
     if(tt.user ==="admin"){
       req.type="admin"
       next();

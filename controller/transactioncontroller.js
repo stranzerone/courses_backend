@@ -52,7 +52,7 @@ exports.getTransactionSummary = async (req, res) => {
       return total + transaction.price;
     }, 0);
 
-    console.log(sumOfPrices,"sum")
+   
 
     res.json({ sumOfPrices });
   } catch (error) {
