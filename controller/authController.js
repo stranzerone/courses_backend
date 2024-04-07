@@ -73,7 +73,7 @@ exports.login = async (req, res) => {
     // Save JWT token in a cookie
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
-     secure:false ,// Set to false as you want to use in both development and production
+     secure:true ,// Set to false as you want to use in both development and production
       maxAge:1000*60*60, // Expires in 1 hour
       httpOnly:true
     });
