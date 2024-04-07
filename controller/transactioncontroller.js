@@ -52,7 +52,7 @@ exports.getTransactionSummary = async (req, res) => {
       return total + transaction.price;
     }, 0);
 
-   
+    console.log(sumOfPrices,"sum")
 
     res.json({ sumOfPrices });
   } catch (error) {
@@ -110,6 +110,7 @@ exports.initate = async (req, res) => {
 const PASSKEY = process.env.PASSKEY
 const MAIL = process.env.GMAIL
 const nodemailer = require('nodemailer');
+const { isErrored } = require('nodemailer/lib/xoauth2/index.js');
 // Configure nodemailer transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -121,7 +122,6 @@ const transporter = nodemailer.createTransport({
 
 // Endpoint to send receipt email
 exports.sendRecepit =  async (req, res) => {
-
     // Generate receipt HTML content (you can use a template engine like EJS)
     const receiptHTML = `
         <h1>Receipt for Your Payment</h1>
@@ -154,24 +154,51 @@ exports.sendRecepit =  async (req, res) => {
 
 
  exports.paymentSuccessHandle = async(req,res)=>{
-
+console.log(req.body,"hhhh")
 try{
 const data =req.body
 const user = req.user
 const price = data.price
+const refral  = data.refral
 const today = new Date().toISOString().split('T')[0];
 
 
-const transaction = new Transaction({ userId:user.userId,ProductId:data.id,transactionId:data.response.razorpay_payment_id,signature:data.response.razorpay_signature,date:today,price:price });
+const transaction = new Transaction({ userId:user.userId,ProductId:data.id,transactionId:data.response.razorpay_payment_id,signature:data.response.razorpay_signature,date:today,price:price,refralCode:refral });
 
 await transaction.save()
-
+res.status(200).json("added transaction")
 
 }catch(error){
   console.error(error)
+  res.status(500).json(error)
 }
 
 }
+
+
+
+
+
+
+
+
+exports.myUsedRefrals = async(req,res)=>{
+  const refral  = req.params.refral
+  try{
+
+  
+const response = await Transaction.find({refralCode:refral})  
+
+  res.status(200).json(response.length)
+  
+  }catch(error){
+    console.error(error)
+    res.status(500).json(error)
+  }
+  
+  }
+
+
 
 
 
@@ -191,3 +218,23 @@ try{
 }
 
 }
+
+
+exports.usersTransactions = async(req,res) =>{
+
+
+  try{
+
+    const user = req.user
+  
+    const allTransactions = await Transaction.find({userId:user.userId})
+  
+    res.status(200).json(allTransactions.length)
+  
+  
+  }catch(error){
+    console.error(error)
+    res.status(500).json(error)
+  }
+  
+  }

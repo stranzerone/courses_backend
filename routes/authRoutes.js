@@ -9,5 +9,6 @@ router.get('/type',authenticateToken,authController.type)
 router.get('/findUser',authenticateToken,authController.finduser)
 router.post('/findRefral',authenticateToken,authController.refralCode)
 router.get('/allUsers',authController.allUsers)
+router.put('/addImage/:username',authController.addImage)
 
 module.exports = router;

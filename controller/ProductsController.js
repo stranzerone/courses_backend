@@ -43,7 +43,6 @@ exports.updatedProduct = async (req, res) => {
         const newData = req.body;
 
         const updatedProduct = await Product.updateOne({ productId : id }, newData);
-
         res.status(200).json({ message: 'Product updated successfully' });
     } catch (error) {
         console.error(error);
@@ -56,11 +55,9 @@ exports.updatedProduct = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
     try {
-
         const productId = generateRandomNumber()
        const { title, description, seller, price,image } = req.body;
-      
-        const newProduct = new Product({ title, description, seller, price,image,productId });
+        const newProduct = new Product({ title, description, seller, price,image:req.body.images,productId });
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct);
     } catch (error) {
@@ -73,11 +70,9 @@ exports.addProduct = async (req, res) => {
 
 exports.myProducts = async (req, res) => {
 
-    console.log("you have been entered")
     try {
 
         const user = req.user
-
         const response = await Transaction.find({userId:user.userId})
         res.status(200).json(response);
     } catch (error) {

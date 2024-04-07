@@ -4,12 +4,20 @@ const bodyParser = require('body-parser');
 const transactionRoutes = require('./routes/transactionRoutes');
 const authRoute = require('./routes/authRoutes.js')
 const productRoute =  require('./routes/productRoute.js')
-const cors = require('cors')
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const app = express();
 app.use(bodyParser.json());
-app.use(cors())
+const FRONTEND = process.env.FRONTEND_URL
+
+app.use(cors({
+    origin: FRONTEND,
+    credentials: true,
+  }));
+  
 // Connect to MongoDB
 require("dotenv").config({ path: ".env" });
+app.use(cookieParser())
 const Connections = async  () => {
 const DATABASE = process.env.DATABASE_URI
     try{
@@ -27,6 +35,7 @@ const DATABASE = process.env.DATABASE_URI
 Connections()
 
 // Routes
+
 app.use('/transactions', transactionRoutes);
 
 app.use('/auth',authRoute)

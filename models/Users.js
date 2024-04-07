@@ -24,6 +24,9 @@ refralCode:{
   type:String,
   require:true
 },
+image:{
+  type:String,
+}
 
 
 });
