@@ -95,3 +95,23 @@ const {id}  = req.params
         res.status(500).json({ message: 'Server Error' });
     }
 };
+
+
+
+
+
+exports.addImagesToCloud = async(req,res)=>{
+
+
+    try {
+
+        console.log(req.body)
+        const { data } = await axios.post('https://api.cloudinary.com/v1_1/ddtbimcoe/image/upload',);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error uploading to Cloudinary' });
+    }
+
+
+
+}

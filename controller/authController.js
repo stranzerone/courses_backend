@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword,type:"user",fName,lName,refralCode:refralCode });
+    const user = new User({ username, email, password: hashedPassword,type:"admin",fName,lName,refralCode:refralCode });
     await user.save();
     res.status(201).json({ message: 'User registered successfully',username });
   } catch (err) {
@@ -72,10 +72,10 @@ exports.login = async (req, res) => {
 
     // Save JWT token in a cookie
     res.cookie('accessToken', accessToken, {
-      maxAge: 9000000,
-    httpOnly: true,
-    sameSite: 'None',
-    secure: true
+      httpOnly: true,
+     secure:true ,// Set to false as you want to use in both development and production
+      maxAge:1000*60*60, // Expires in 1 hour
+      httpOnly:true
     });
 
     res.status(200).json({ accessToken, type: user.type });
@@ -131,8 +131,9 @@ exports.refralCode = async (req, res) => {
 
   try {
    
-   const {referralCode} = req.body
-    const   foundUser = await User.findOne({referralCode})
+   const {refralCode} = req.body
+ 
+    const   foundUser = await User.findOne({refralCode})
     
 if(foundUser){
     res.status(200).json("refral code Valid");
