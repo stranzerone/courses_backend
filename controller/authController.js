@@ -75,7 +75,8 @@ exports.login = async (req, res) => {
       httpOnly: true,
      secure:false ,// Set to false as you want to use in both development and production
       maxAge:1000*60*60, // Expires in 1 hour
-      httpOnly:true
+      httpOnly:false,
+      sameSite:'None',
     });
 
     res.status(200).json({ accessToken, type: user.type });
