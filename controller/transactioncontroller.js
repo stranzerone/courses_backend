@@ -52,7 +52,6 @@ exports.getTransactionSummary = async (req, res) => {
       return total + transaction.price;
     }, 0);
 
-    console.log(sumOfPrices,"sum")
 
     res.json({ sumOfPrices });
   } catch (error) {
@@ -125,7 +124,8 @@ exports.sendRecepit =  async (req, res) => {
 
   const user = req.user
 
-  
+
+
     // Generate receipt HTML content (you can use a template engine like EJS)
     const receiptHTML = `
         <h1>Receipt for Your Payment</h1>
@@ -138,12 +138,12 @@ exports.sendRecepit =  async (req, res) => {
 
     try {
 
-      const userData = User.findById(user.userId)
-    console.log(userData,"kkkk")
+      
         // Send email
+       
         const mailOptions = {
           from: MAIL,
-          to:userData.email,
+          to:user.email,
           subject: 'Receipt for Your Payment',
           html: receiptHTML
       };
@@ -162,7 +162,6 @@ exports.sendRecepit =  async (req, res) => {
 
 
  exports.paymentSuccessHandle = async(req,res)=>{
-console.log(req.body,"hhhh")
 try{
 const data =req.body
 const user = req.user

@@ -94,7 +94,7 @@ exports.login = async (req, res) => {
     const validPassword =  bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(203).json({ message: 'Invalid password' });
 
-    const accessToken = jwt.sign({ userId: user._id, user: user.type }, "sahil", { expiresIn: '1h' });
+    const accessToken = jwt.sign({ userId: user._id, user: user.type,email:user.email }, "sahil", { expiresIn: '1h' });
 
     // Save JWT token in a cookie
     res.cookie('accessToken', accessToken, {

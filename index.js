@@ -13,6 +13,7 @@ const FRONTEND = process.env.FRONTEND_URL
 app.use(cors({
     origin: FRONTEND,
     credentials: true,
+    secure:false
   }));
   
 // Connect to MongoDB
