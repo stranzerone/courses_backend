@@ -33,6 +33,22 @@ const productSchema = new mongoose.Schema({
         required:true,
      
     },
+    productLink:{
+        type:String,
+        required:true,
+        unique:true
+     
+    },
+    createdDate:{
+        type : Date,
+        require:true,
+
+    },
+    deployedLink:{
+        type : String,
+        require:true,
+        
+    }
     
 });
 

@@ -1,5 +1,5 @@
 const Transaction = require('../models/Transcation.js');
-
+const User = require('../models/Users.js')
 
 require("dotenv").config({ path: ".env" });
 
@@ -122,23 +122,31 @@ const transporter = nodemailer.createTransport({
 
 // Endpoint to send receipt email
 exports.sendRecepit =  async (req, res) => {
+
+  const user = req.user
+
+  
     // Generate receipt HTML content (you can use a template engine like EJS)
     const receiptHTML = `
         <h1>Receipt for Your Payment</h1>
-        <p>Payment Details: You have successfully made a payment of 10rs</p>
+        <p>Payment Details: You have successfully made a payment For the product From Codecells</p>
         <!-- Include more payment details here -->
     `;
 
     // Email options
-    const mailOptions = {
-        from: MAIL,
-        to: "ayanmulani2599@gmail.com",
-        subject: 'Receipt for Your Payment',
-        html: receiptHTML
-    };
+  
 
     try {
+
+      const userData = User.findById(user.userId)
+    console.log(userData,"kkkk")
         // Send email
+        const mailOptions = {
+          from: MAIL,
+          to:userData.email,
+          subject: 'Receipt for Your Payment',
+          html: receiptHTML
+      };
         await transporter.sendMail(mailOptions);
         res.status(200).json({ message: 'Receipt sent successfully' });
     } catch (error) {

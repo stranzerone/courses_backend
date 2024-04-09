@@ -55,9 +55,12 @@ exports.updatedProduct = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
     try {
+        console.log(req.body)
         const productId = generateRandomNumber()
-       const { title, description, seller, price,image } = req.body;
-        const newProduct = new Product({ title, description, seller, price,image:req.body.images,productId });
+        const formattedDate = new Date().toISOString().split('T')[0];
+
+       const { title, description, seller, price,productLink,deployedLink } = req.body;
+        const newProduct = new Product({ title, description, seller, price,image:req.body.images,productId,createdDate:formattedDate,productLink,deployedLink });
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct);
     } catch (error) {
@@ -108,6 +111,23 @@ exports.addImagesToCloud = async(req,res)=>{
         console.log(req.body)
         const { data } = await axios.post('https://api.cloudinary.com/v1_1/ddtbimcoe/image/upload',);
         res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error uploading to Cloudinary' });
+    }
+
+
+
+}
+
+
+exports.deleteProduct = async(req,res)=>{
+
+
+    try {
+const {id} = req.params
+   
+const response =  await Product.findOneAndDelete({productId:id})
+        res.status(200).json('product deleted')
     } catch (error) {
         res.status(500).json({ error: 'Error uploading to Cloudinary' });
     }

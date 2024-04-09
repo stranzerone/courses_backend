@@ -2,27 +2,53 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/Users.js');
 
-exports.register = async (req, res) => {
-  const { username, email, password,fName,lName } = req.body;
 
+exports.register = async (req, res) => {
+  const { username, email, password, fName, lName } = req.body;
+
+  // Validate input data
+  if (!username || !email || !password || !fName || !lName) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
 
   const generateReferralCode = (length) => {
     return [...Array(length)].map(() => Math.random().toString(36)[2]).join('');
   };
 
-  const refralCode = generateReferralCode(8)
-
+  const referralCode = generateReferralCode(8);
 
   try {
+    // Check if user with the email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(209).json({ message: 'Email already in use' });
+    }
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword,type:"user",fName,lName,refralCode:refralCode });
+
+    // Create a new user
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      type: 'user',
+      fName,
+      lName,
+      referralCode,
+    });
+
+    // Save the user to the database
     await user.save();
-    res.status(201).json({ message: 'User registered successfully',username });
+
+    // Respond with success message
+    res.status(201).json({ message: 'User registered successfully', username });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    // Handle errors
+    console.error(err.message);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
 
 
 

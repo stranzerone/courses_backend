@@ -10,5 +10,6 @@ router.put('/updateProduct/:id',authenticateTokenAdmin,updatedProduct);
 router.get('/myPoducts',authenticateToken,myProducts);
 router.delete('/deleteProduct/:id',authenticateTokenAdmin,deleteProduct);
 router.post('/addProductImages',authenticateTokenAdmin,addImagesToCloud );
+router.delete('/deleteProduct/:id',authenticateTokenAdmin,deleteProduct );
 
 module.exports = router;
