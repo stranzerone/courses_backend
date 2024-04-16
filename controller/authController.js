@@ -91,9 +91,8 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(202).json({ message: 'Invalid email' });
 
-    const validPassword =  bcrypt.compare(password, user.password);
+    const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(203).json({ message: 'Invalid password' });
-
     const accessToken = jwt.sign({ userId: user._id, user: user.type,email:user.email }, "sahil", { expiresIn: '1h' });
 
     // Save JWT token in a cookie
@@ -103,6 +102,7 @@ exports.login = async (req, res) => {
     sameSite: 'None',
     secure: true
     });
+
 
     res.status(200).json({ accessToken, type: user.type });
 
