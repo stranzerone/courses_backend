@@ -103,21 +103,50 @@ const {id}  = req.params
 
 
 
-exports.addImagesToCloud = async(req,res)=>{
+// exports.addImagesToCloud = async(req,res)=>{
 
 
+//     try {
+
+//         console.log(req.body)
+//         const { data } = await axios.post('https://api.cloudinary.com/v1_1/ddtbimcoe/image/upload',);
+//         res.json(data);
+//     } catch (error) {
+//         res.status(500).json({ error: 'Error uploading to Cloudinary' });
+//     }
+
+
+
+// }
+
+
+
+
+
+exports.addImagesToCloud = async (req, res) => {
     try {
+        console.log(req.body);
 
-        console.log(req.body)
-        const { data } = await axios.post('https://api.cloudinary.com/v1_1/ddtbimcoe/image/upload',);
+        // Assuming the image file is being sent as part of the request body
+        const { file } = req.body;
+
+        // Create a new FormData instance
+        const formData = new FormData();
+        formData.append('file', file); // Append the image file to the formData
+        formData.append('upload_preset', 'h6faps0i'); // Use your Cloudinary upload preset
+
+        // Make a POST request to Cloudinary
+        const { data } = await axios.post('https://api.cloudinary.com/v1_1/ddtbimcoe/image/upload', formData, {
+            headers: formData.getHeaders(), // Set headers for multipart/form-data
+        });
+
+        // Send back the response data from Cloudinary
         res.json(data);
     } catch (error) {
+        console.error('Error uploading to Cloudinary:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Error uploading to Cloudinary' });
     }
-
-
-
-}
+};
 
 
 exports.deleteProduct = async(req,res)=>{
