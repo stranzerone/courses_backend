@@ -27,9 +27,9 @@ const productSchema = new mongoose.Schema({
         unique:true
     },
     status:{
-        type:Number,
-        enum: [0, 1], // Allowed values are 0 and 1
-        default: 1, // Default value is 1
+        type:String,
+        enum: ['accepted', 'rejected','pending'], // Allowed values are 0 and 1
+        default: 'pending', // Default value is 1
         required:true,
      
     },
@@ -48,6 +48,16 @@ const productSchema = new mongoose.Schema({
         type : String,
         require:true,
         
+    },
+    username:{
+        type:String,
+        require:true
+       
+    },
+    adminStatus:{
+        type:String,
+        enum:['accepted','pending','rejected'],
+        default:'pending'
     }
     
 });

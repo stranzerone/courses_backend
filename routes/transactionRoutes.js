@@ -13,6 +13,7 @@ router.post('/sendRecepit',authenticateToken,transactionController.sendRecepit);
 router.post('/paymentSuccess', authenticateToken,transactionController.paymentSuccessHandle);
 router.get('/allTransactions', authenticateTokenAdmin,transactionController.allTransactions);
 router.get('/usedRefral/:refral', authenticateToken,transactionController.myUsedRefrals);
-router.get("/userTransactions",authenticateToken,transactionController.usersTransactions)
+//users all tranction route
+router.get("/:route/:category",authenticateToken,transactionController.usersTransactions)
 
 module.exports = router;

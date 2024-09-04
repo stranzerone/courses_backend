@@ -5,18 +5,29 @@ const transactionSchema = new mongoose.Schema({
     type:String,
     require:true
   },
-  transactionId:{type:String,required:true},
-  ProductId: {type:String,required:true},
- signature:{type:String,required:true},
-
-  category:{
-type:String,
-default:"web"
-
-
+  transactionId:{
+   type:String,required:true
   },
-  price:{type:Number,require:true},
-  refralCode:{type:String},
+  ProductId: {
+    type:String,
+    required:true
+  },
+ signature:{
+  type:String,required:true
+},
+
+ category: {
+  type: String,
+  enum: ["component", "project", "bid"],
+  required: true
+},
+  price:{
+    type:Number,
+    require:true
+  },
+  refralCode:{
+    type:String
+  },
   date: Date
 },
 );

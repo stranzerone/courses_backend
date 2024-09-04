@@ -1,5 +1,4 @@
 const Transaction = require('../models/Transcation.js');
-const User = require('../models/Users.js')
 
 require("dotenv").config({ path: ".env" });
 
@@ -170,7 +169,7 @@ const refral  = data.refral
 const today = new Date().toISOString().split('T')[0];
 
 
-const transaction = new Transaction({ userId:user.userId,ProductId:data.id,transactionId:data.response.razorpay_payment_id,signature:data.response.razorpay_signature,date:today,price:price,refralCode:refral });
+const transaction = new Transaction({ userId:user.userId,ProductId:data.id,transactionId:data.response.razorpay_payment_id,signature:data.response.razorpay_signature,date:today,price:price,refralCode:refral,category:data.category });
 
 await transaction.save()
 res.status(200).json("added transaction")
@@ -233,9 +232,11 @@ exports.usersTransactions = async(req,res) =>{
   try{
 
     const user = req.user
-  
-    const allTransactions = await Transaction.find({userId:user.userId})
-  
+    console.log(user)
+    const {category} = req.params
+  console.log(category,'category')
+    const allTransactions = await Transaction.find({userId:user.userId,category:category})
+  console.log(allTransactions,'all transactions')
     res.status(200).json(allTransactions.length)
   
   

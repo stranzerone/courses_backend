@@ -9,6 +9,9 @@ exports.authenticateToken = (req, res, next) => {
     if (err) return res.sendStatus(403);
     req.user = user;
     req.type = user.user;
+  
+   
+
     next();
   });
 };
