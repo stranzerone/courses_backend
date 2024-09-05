@@ -29,10 +29,15 @@ image:{
   type:String,
 },
 upi:{
-  Type:String
+  type:String
+},
+verification:{
+  type:String,
+  enum:["pending","accepted","rejected"],
+  default:"pending"
 },
 location:{
-  Type:String
+  type:String
 }
 
 

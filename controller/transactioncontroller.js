@@ -1,5 +1,5 @@
 const Transaction = require('../models/Transcation.js');
-
+const axios = require('axios'); // Import axios
 require("dotenv").config({ path: ".env" });
 
 
@@ -83,6 +83,68 @@ const razorpay = new Razorpay({
 
 //rzp_live_mF0PwzxnLR4axK,qrOoYOOxQtTCIJm0xEGNLAtG
 // Route to initiate payment and generate order ID
+
+
+
+exports.verifyUpi = async (req, res) => {
+  const { upiId } = req.body;
+
+  console.log(upiId, "Received UPI ID");
+
+  if (!upiId) {
+    return res.status(400).json({ error: 'UPI ID is required' });
+  }
+
+  try {
+    const response = await axios.post('https://api.razorpay.com/v1/payments/validate/vpa', 
+      { upi_id: upiId }, // Data to send
+      {
+        auth: {
+          username: SECRETID,
+          password: SECRET_KEY
+        }
+      }
+    );
+    // Example API call - replace with the actual Razorpay endpoint if available
+    // const response = await axios({
+    //   method: 'POST',
+    //   url: 'https://api.razorpay.com/v1/payments/validate/vpa', // Update with the correct endpoint
+    //   auth: {
+    //     username: SECRETID,
+    //     password: SECRET_KEY
+    //   },
+   
+    //   data: {
+    //     upi_id: upiId
+    //   }
+    // });
+
+    console.log(response.data, "Razorpay API Response");
+
+    if (response.status === 200) {
+      return res.status(200).json({ success: true, message: 'UPI ID verified successfully' });
+    } else {
+      return res.status(400).json({ success: false, message: 'UPI ID verification failed' });
+    }
+  } catch (error) {
+    console.error('Error verifying UPI ID:', error.response ? error.response.data : error.message);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 exports.initate = async (req, res) => {
     try {
 
@@ -175,7 +237,6 @@ await transaction.save()
 res.status(200).json("added transaction")
 
 }catch(error){
-  console.error(error)
   res.status(500).json(error)
 }
 
@@ -198,7 +259,6 @@ const response = await Transaction.find({refralCode:refral})
   res.status(200).json(response.length)
   
   }catch(error){
-    console.error(error)
     res.status(500).json(error)
   }
   
@@ -219,7 +279,6 @@ try{
 
 
 }catch(error){
-  console.error(error)
   res.status(500).json(error)
 }
 
@@ -232,17 +291,43 @@ exports.usersTransactions = async(req,res) =>{
   try{
 
     const user = req.user
-    console.log(user)
-    const {category} = req.params
-  console.log(category,'category')
-    const allTransactions = await Transaction.find({userId:user.userId,category:category})
-  console.log(allTransactions,'all transactions')
-    res.status(200).json(allTransactions.length)
-  
+    const {ProductId} = req.params
+    const allTransactions = await Transaction.find({userId:user.userId,ProductId:ProductId})
+    console.log(allTransactions.length,ProductId,user,"my all transactions")
+    if(allTransactions.length >0){
+    res.status(200).json({success:true,message:"purchased successfully"})
+    }else{
+      res.status(200).json({success:false,message:"purchased successfully"})
+
+    }
   
   }catch(error){
     console.error(error)
-    res.status(500).json(error)
+    res.status(500).json({success:false,message:"some thing is wrong"})
+  }
+  
+  }
+
+
+  
+exports.usersAllTransactions = async(req,res) =>{
+
+
+  try{
+
+    const user = req.user
+    const {category} = req.params
+    const allTransactionsCategory = await Transaction.find({userId:user.userId,category:category})
+ 
+    console.log("My transactions of ",allTransactionsCategory,category)
+   
+    res.status(200).json({success:true,message:"purchased successfully",data:allTransactionsCategory})
+
+    
+  
+  }catch(error){
+    console.error(error)
+    res.status(500).json({success:false,message:"some thing is wrong"})
   }
   
   }

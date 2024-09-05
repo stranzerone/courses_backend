@@ -18,7 +18,6 @@ const generateRandomNumber = () => {
         }
         res.json(product);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -67,7 +66,6 @@ exports.updatedProduct = async (req, res) => {
         return res.status(403).json({ success: false, message: 'Unauthorized to update this product' });
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ success: false, message: 'Server Error' });
     }
 };
@@ -82,12 +80,11 @@ exports.addProduct = async (req, res) => {
         const productId = generateRandomNumber()
         const formattedDate = new Date().toISOString().split('T')[0];
         const username = req.user.userId
-       const { title, description, seller, price,productLink,deployedLink } = req.body;
-        const newProduct = new Product({ title, description, seller, price,image:req.body.images,productId,createdDate:formattedDate,productLink,deployedLink,username });
+       const { title, description, seller, price,productLink,deployedLink,githubLink } = req.body;
+        const newProduct = new Product({ title, description, seller, price,image:req.body.images,productId,createdDate:formattedDate,productLink,deployedLink,username,githubLink });
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -102,7 +99,6 @@ exports.myProducts = async (req, res) => {
         const response = await Transaction.find({userId:user.userId})
         res.status(200).json(response);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
@@ -121,8 +117,6 @@ exports.myProducts = async (req, res) => {
 
 exports.addImagesToCloud = async (req, res) => {
     try {
-        console.log(req.body);
-
         // Assuming the image file is being sent as part of the request body
         const { file } = req.body;
 

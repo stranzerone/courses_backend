@@ -14,6 +14,9 @@ router.post('/paymentSuccess', authenticateToken,transactionController.paymentSu
 router.get('/allTransactions', authenticateTokenAdmin,transactionController.allTransactions);
 router.get('/usedRefral/:refral', authenticateToken,transactionController.myUsedRefrals);
 //users all tranction route
-router.get("/:route/:category",authenticateToken,transactionController.usersTransactions)
+router.get("/:ProductId",authenticateToken,transactionController.usersTransactions)
+router.get("/allPruchases/:category",authenticateToken,transactionController.usersAllTransactions)
+router.post("/verifyUpi",authenticateToken,transactionController.verifyUpi)
+
 
 module.exports = router;

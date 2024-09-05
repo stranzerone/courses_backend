@@ -46,7 +46,6 @@ exports.register = async (req, res) => {
     res.status(201).json({ message: 'User registered successfully', username });
   } catch (err) {
     // Handle errors
-    console.error(err.message);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
@@ -58,7 +57,6 @@ exports.register = async (req, res) => {
 
 exports.addImage = async (req, res) => {
  const {username} =req.params
-console.log(req.body,'body')
 const {avatarURL, location} = req.body
   try {
   
@@ -193,36 +191,67 @@ exports.allUsers = async (req, res) => {
 };
 
 
-
-
-// Update UPI for a user
+// Update UPI or Verification for a user or admin
 exports.updateUser = async (req, res) => {
+  const token = req.user;
+
   try {
-    const { upi } = req.body;
-    console.log(req.body)
-    const userId = req.user.userId; // Assuming user ID is stored in req.user
-    console.log(req.body,userId)
-    if (!upi) {
-      return res.status(400).json({ message: 'UPI ID is required' });
+
+    // Check if the user is a regular user
+    if (token.user === 'user') {
+      const { upi, verification } = req.body;
+
+      if (!upi) {
+        return res.status(400).json({ message: 'UPI ID is required' });
+      }
+
+      // UPI validation (if required)
+      // Example UPI validation (optional)
+      // const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+      // if (!upiRegex.test(upi)) {
+      //   return res.status(400).json({ message: 'Invalid UPI format' });
+      // }
+
+      // Find and update user UPI
+      const user = await User.findOne({ username: token.userId });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Update user UPI and verification status
+      user.upi = upi;
+      user.verification = verification;
+      await user.save();
+
+      return res.status(200).json({ message: 'UPI ID updated successfully', upi: user.upi });
+    } 
+    
+    // Check if the user is an admin
+    else if (token.user === 'admin') {
+      const { username, verification } = req.body;
+
+      if (!username || !verification) {
+        return res.status(400).json({ message: 'Username and verification status are required' });
+      }
+
+      
+      // Find and update verification status for another user
+      const user = await User.findOneAndUpdate(
+        { username: username },
+        { verification: verification },
+        { new: true } // Returns the updated user document
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      return res.status(200).json({ message: 'User verification updated', user });
+    } else {
+      return res.status(403).json({ message: 'Unauthorized' });
     }
-
-    // Validate UPI format if needed
-    // e.g., using regex
-
-    // Find user and update UPI
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.upi = upi;
-    await user.save();
-
-    res.status(200).json({ message: 'UPI ID updated successfully', upi: user.upi });
   } catch (error) {
-    console.error('Error updating UPI:', error);
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };
-
-

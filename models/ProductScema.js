@@ -5,6 +5,16 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    adminStatus:{
+type:String,
+enum:["pending","accepted","rejected"],
+default:"pending"
+
+    },
+    githubLink:{
+type:String,
+require:true
+    },
     description: {
         type: String,
         required: true

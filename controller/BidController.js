@@ -7,7 +7,7 @@ exports.createBid = async (req, res) => {
     
     const username = req.user.userId
     const {  imageUrl, budget,description,completionDate } = req.body;
-console.log(req.body)
+
     const newBid = new Bid({
       username,
       imageUrl,
@@ -73,8 +73,6 @@ exports.updateBid = async (req, res) => {
   const { id } = req.params;
   const username = req.user;
   const { userStatus, description, budget, completionDate,adminStatus } = req.body;
-
-  console.log(req.body,"data")
   try {
     // Find the bid by ID
     const bid = await Bid.findById(id);
