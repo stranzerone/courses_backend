@@ -3,6 +3,29 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/Users.js');
 
 
+
+exports.verifyUser = async(req,res) =>{
+
+try{
+
+res.status(200).json("user verified")
+
+
+
+
+
+}catch(error){
+  res.status(400).json("user is not recongnised")
+}
+
+}
+
+
+
+
+
+
+
 exports.register = async (req, res) => {
   const { username, email, password, fName, lName,image } = req.body;
 
