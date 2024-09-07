@@ -228,9 +228,9 @@ exports.updateUser = async (req, res) => {
     
     // Check if the user is an admin
     else if (token.user === 'admin') {
-      const { username, verification } = req.body;
+      const { username, verification,earnings } = req.body;
 
-      if (!username || !verification) {
+      if (!username || !verification || !earnings) {
         return res.status(400).json({ message: 'Username and verification status are required' });
       }
 
@@ -238,10 +238,9 @@ exports.updateUser = async (req, res) => {
       // Find and update verification status for another user
       const user = await User.findOneAndUpdate(
         { username: username },
-        { verification: verification },
+        { verification: verification ,earnings:earnings},
         { new: true } // Returns the updated user document
       );
-
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }

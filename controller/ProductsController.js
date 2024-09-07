@@ -47,7 +47,6 @@ exports.updatedProduct = async (req, res) => {
         const id = req.params.id;
         const newData = req.body;
         const username = req.user.userId;
-
         // Find the product by productId
         const product = await Product.findOne({ productId: id });
 

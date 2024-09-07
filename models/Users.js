@@ -39,11 +39,10 @@ verification:{
 location:{
   type:String
 },
-  earnings:{
+earnings:{
   type:String,
   default:"0"
 }
-
 
 
 });

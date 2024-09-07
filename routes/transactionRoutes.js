@@ -17,6 +17,6 @@ router.get('/usedRefral/:refral', authenticateToken,transactionController.myUsed
 router.get("/:ProductId",authenticateToken,transactionController.usersTransactions)
 router.get("/allPruchases/:category",authenticateToken,transactionController.usersAllTransactions)
 router.post("/verifyUpi",authenticateToken,transactionController.verifyUpi)
-
+router.get("/users/TotalPurchasedItems",authenticateToken,transactionController.usersAllPucrchases)
 
 module.exports = router;

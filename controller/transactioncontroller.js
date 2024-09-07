@@ -89,7 +89,6 @@ const razorpay = new Razorpay({
 exports.verifyUpi = async (req, res) => {
   const { upiId } = req.body;
 
-  console.log(upiId, "Received UPI ID");
 
   if (!upiId) {
     return res.status(400).json({ error: 'UPI ID is required' });
@@ -105,21 +104,8 @@ exports.verifyUpi = async (req, res) => {
         }
       }
     );
-    // Example API call - replace with the actual Razorpay endpoint if available
-    // const response = await axios({
-    //   method: 'POST',
-    //   url: 'https://api.razorpay.com/v1/payments/validate/vpa', // Update with the correct endpoint
-    //   auth: {
-    //     username: SECRETID,
-    //     password: SECRET_KEY
-    //   },
-   
-    //   data: {
-    //     upi_id: upiId
-    //   }
-    // });
 
-    console.log(response.data, "Razorpay API Response");
+
 
     if (response.status === 200) {
       return res.status(200).json({ success: true, message: 'UPI ID verified successfully' });
@@ -131,17 +117,6 @@ exports.verifyUpi = async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -165,8 +140,6 @@ exports.initate = async (req, res) => {
     }
 };
 
-
-
 const PASSKEY = process.env.PASSKEY
 const MAIL = process.env.GMAIL
 const nodemailer = require('nodemailer');
@@ -184,9 +157,6 @@ const transporter = nodemailer.createTransport({
 exports.sendRecepit =  async (req, res) => {
 
   const user = req.user
-
-
-
     // Generate receipt HTML content (you can use a template engine like EJS)
     const receiptHTML = `
         <h1>Receipt for Your Payment</h1>
@@ -216,12 +186,6 @@ exports.sendRecepit =  async (req, res) => {
     }
 };
 
-
-
-
-
-
-
  exports.paymentSuccessHandle = async(req,res)=>{
 try{
 const data =req.body
@@ -242,13 +206,6 @@ res.status(200).json("added transaction")
 
 }
 
-
-
-
-
-
-
-
 exports.myUsedRefrals = async(req,res)=>{
   const refral  = req.params.refral
   try{
@@ -263,11 +220,6 @@ const response = await Transaction.find({refralCode:refral})
   }
   
   }
-
-
-
-
-
 exports.allTransactions = async(req,res) =>{
 
 
@@ -284,7 +236,6 @@ try{
 
 }
 
-
 exports.usersTransactions = async(req,res) =>{
 
 
@@ -293,10 +244,10 @@ exports.usersTransactions = async(req,res) =>{
     const user = req.user
     const {ProductId} = req.params
     const allTransactions = await Transaction.find({userId:user.userId,ProductId:ProductId})
-    console.log(allTransactions.length,ProductId,user,"my all transactions")
     if(allTransactions.length >0){
     res.status(200).json({success:true,message:"purchased successfully"})
     }else{
+      console.log("hello")
       res.status(200).json({success:false,message:"purchased successfully"})
 
     }
@@ -308,8 +259,6 @@ exports.usersTransactions = async(req,res) =>{
   
   }
 
-
-  
 exports.usersAllTransactions = async(req,res) =>{
 
 
@@ -319,7 +268,6 @@ exports.usersAllTransactions = async(req,res) =>{
     const {category} = req.params
     const allTransactionsCategory = await Transaction.find({userId:user.userId,category:category})
  
-    console.log("My transactions of ",allTransactionsCategory,category)
    
     res.status(200).json({success:true,message:"purchased successfully",data:allTransactionsCategory})
 
@@ -331,3 +279,27 @@ exports.usersAllTransactions = async(req,res) =>{
   }
   
   }
+exports.usersAllPucrchases = async(req,res) =>{
+
+
+  try{
+
+    const user = req.user
+    const TotalTransactions = await Transaction.find({userId:user.userId})
+ 
+    console.log("My transactions of ",TotalTransactions)
+   
+    res.status(200).json({success:true,message:"my all successfull transactions",data:TotalTransactions.length})
+
+    
+  
+  }catch(error){
+    console.error(error)
+    res.status(500).json({success:false,message:"some thing is wrong"})
+  }
+  
+  }
+
+
+
+  
