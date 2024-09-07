@@ -123,9 +123,9 @@ exports.verifyUpi = async (req, res) => {
 exports.initate = async (req, res) => {
     try {
 
-      price = req.body.price
+     const price = req.body.amount
         const orderOptions = {
-            amount: price *100, // Amount in paisa (example: 1000 paisa = ₹10)
+            amount: price * 100, // Amount in paisa (example: 1000 paisa = ₹10)
             currency: 'INR',
             receipt: 'receipt#1',
             payment_capture: 1 // Auto-capture payment after order creation
@@ -247,7 +247,6 @@ exports.usersTransactions = async(req,res) =>{
     if(allTransactions.length >0){
     res.status(200).json({success:true,message:"purchased successfully"})
     }else{
-      console.log("hello")
       res.status(200).json({success:false,message:"purchased successfully"})
 
     }
@@ -287,7 +286,6 @@ exports.usersAllPucrchases = async(req,res) =>{
     const user = req.user
     const TotalTransactions = await Transaction.find({userId:user.userId})
  
-    console.log("My transactions of ",TotalTransactions)
    
     res.status(200).json({success:true,message:"my all successfull transactions",data:TotalTransactions.length})
 
