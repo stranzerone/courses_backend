@@ -38,7 +38,12 @@ verification:{
 },
 location:{
   type:String
+},
+  earnings:{
+  type:String,
+  default:"0"
 }
+
 
 
 });
