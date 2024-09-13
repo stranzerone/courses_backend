@@ -12,5 +12,7 @@ router.post('/findRefral',authenticateToken,authController.refralCode)
 router.get('/allUsers',authController.allUsers)
 router.put('/addImage/:username',authController.addImage)
 router.put('/update',authenticateToken,authController.updateUser)
+router.delete('/logout',authenticateToken,authController.logoutController)
+
 
 module.exports = router;

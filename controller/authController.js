@@ -23,11 +23,8 @@ res.status(200).json("user verified")
 
 
 
-
-
-
 exports.register = async (req, res) => {
-  const { username, email, password, fName, lName,image } = req.body;
+  const { username, email, password, fName, lName, image } = req.body;
 
   // Validate input data
   if (!username || !email || !password || !fName || !lName) {
@@ -35,20 +32,22 @@ exports.register = async (req, res) => {
   }
 
   const generateReferralCode = (length) => {
-    return [...Array(length)].map(() => Math.random().toString(36)[2]).join('');
+  
+    return [...Array(length)].map(() => Math.random().toString(36)[2]).join('').toUpperCase();
   };
-
-  const referralCode = generateReferralCode(8);
 
   try {
     // Check if user with the email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(209).json({ message: 'Email already in use' });
+      return res.status(409).json({ message: 'Email already in use' });
     }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Generate referral code
+    const refral = generateReferralCode(8);
 
     // Create a new user
     const user = new User({
@@ -58,7 +57,7 @@ exports.register = async (req, res) => {
       type: 'user',
       fName,
       lName,
-      referralCode,
+      referralCode: refral, // Ensure this is being set correctly
       image
     });
 
@@ -66,12 +65,14 @@ exports.register = async (req, res) => {
     await user.save();
 
     // Respond with success message
-    res.status(201).json({ message: 'User registered successfully', username });
+    res.status(201).json({ message: 'User registered successfully', username, refralCode: refral });
   } catch (err) {
     // Handle errors
+    console.error('Error registering user:', err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
 
 
 
@@ -277,3 +278,19 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+
+exports.logoutController = (req, res) => {
+
+  try {
+      // Clear the specific cookie (e.g., 'accessToken')
+      res.clearCookie('accessToken', { path: '/' });
+
+      res.status(200).json({ message: 'Logout successful, cookie cleared' });
+  } catch (error) {
+      // Handle error if cookie clearing fails
+      res.status(500).json({ error: 'Error logging out and clearing cookie' });
+  }
+};
+

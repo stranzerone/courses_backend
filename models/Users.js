@@ -21,7 +21,7 @@ lName:{
   type:String,
   require:true
 },
-refralCode:{
+referralCode:{
   type:String,
   require:true
 },
